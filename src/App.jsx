@@ -1,6 +1,6 @@
 import './App.css'
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
-//import Navbar from "./components/Navbar"
+import Navbar from "./components/Navbar"
 import Home from './components/Home';
 /*import EmployeeList from './components/EmployeesList';
 import AddEditEmployee from './components/AddEditEmployee';
@@ -14,10 +14,11 @@ import AnualReport from './components/AnualReport';*/
 function App() {
   return (
       <Router>
+        <Navbar></Navbar>
           <div className="container">
-          <Navbar></Navbar>
             <Routes>
               <Route path="/home" element={<Home/>} />
+              <Route path="/" element={<Home/>} />
             </Routes>
           </div>
       </Router>
