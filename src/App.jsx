@@ -2,6 +2,7 @@ import './App.css'
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import Navbar from "./components/Navbar"
 import Home from './components/Home';
+import InicioClientes from './components/InicioClientes';
 /*import EmployeeList from './components/EmployeesList';
 import AddEditEmployee from './components/AddEditEmployee';
 import ExtraHoursList from './components/ExtraHoursList';
@@ -19,6 +20,7 @@ function App() {
             <Routes>
               <Route path="/home" element={<Home/>} />
               <Route path="/" element={<Home/>} />
+              <Route path="/clientes/inicio" element={<InicioClientes/>} />
             </Routes>
           </div>
       </Router>
