@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const payrollBackendServer = import.meta.env.VITE_PAYROLL_BACKEND_SERVER;
-const payrollBackendPort = import.meta.env.VITE_PAYROLL_BACKEND_PORT;
+const Evaluacion1BackendServer = import.meta.env.EVALUACION1_BACKEND_SERVER;
+const Evaluacion1BackendPort = import.meta.env.EVALUACION1_BACKEND_PORT;
 
-console.log(payrollBackendServer)
-console.log(payrollBackendPort)
+console.log(Evaluacion1BackendServer)
+console.log(Evaluacion1BackendPort)
 
 export default axios.create({
-    baseURL: `http://${payrollBackendServer}:${payrollBackendPort}`,
+    baseURL: `http://${Evaluacion1BackendServer}:${Evaluacion1BackendPort}`,
     headers: {
         'Content-Type': 'application/json'
     }

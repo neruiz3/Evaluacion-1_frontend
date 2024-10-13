@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-//import employeeService from "../services/employee.service";
+import clienteService from "../services/cliente.service";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -15,12 +15,31 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 
 const InicioClientes = () => {
-    return (
-      <div>
-        <h1>Clientes</h1>
-      </div>
-      
-    );
-  };
+    const [clientes, setClientes] = useState([]);
   
-  export default InicioClientes;
+    //const navigate = useNavigate();
+  
+    const init = () => {
+      clienteService
+        .getAll()
+        .then((response) => {
+          console.log("Mostrando listado de todos los empleados.", response.data);
+          setClientes(response.data);
+        })
+        .catch((error) => {
+          console.log(
+            "Se ha producido un error al intentar mostrar listado de todos los empleados.",
+            error
+          );
+        });
+    };
+  
+    useEffect(() => {
+      init();
+    }, []);
+    return (
+        <p1>Clientes</p1>
+    );
+}; 
+
+export default InicioClientes;
