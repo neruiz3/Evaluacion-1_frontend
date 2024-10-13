@@ -17,7 +17,7 @@ const get = id => {
 }
 
 const getRut = rut => {
-    return httpClient.get(`/api/v1/clientes/${rut}`);
+    return httpClient.get(`/api/v1/clientes/rut/${rut}`);
 }
 
 export default { getAll, create, get, update, getRut};
