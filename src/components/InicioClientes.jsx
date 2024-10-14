@@ -38,7 +38,32 @@ const InicioClientes = () => {
       init();
     }, []);
     return (
-        <p1>Clientes</p1>
+    <TableContainer component={Paper}>
+        <br />
+      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+        <TableHead>
+          <TableRow>
+            <TableCell align="left" sx={{ fontWeight: "bold" }}>
+              Rut
+            </TableCell>
+            <TableCell align="left" sx={{ fontWeight: "bold" }}>
+              Nombre
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {clientes.map((cliente) => (
+            <TableRow
+              key={cliente.id}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <TableCell align="left">{cliente.rut}</TableCell>
+              <TableCell align="left">{cliente.nombre}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
     );
 }; 
 
