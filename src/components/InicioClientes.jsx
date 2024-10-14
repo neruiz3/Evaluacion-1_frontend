@@ -17,7 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const InicioClientes = () => {
     const [clientes, setClientes] = useState([]);
   
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
   
     const init = () => {
       clienteService
@@ -39,7 +39,20 @@ const InicioClientes = () => {
     }, []);
     return (
     <TableContainer component={Paper}>
-        <br />
+      <br />
+      <Link
+        to="/clientes/nuevo"
+        style={{ textDecoration: "none", marginBottom: "1rem" }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<PersonAddIcon />}
+        >
+          Añadir Cliente
+        </Button>
+      </Link>
+      <br /> <br />
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
@@ -48,6 +61,12 @@ const InicioClientes = () => {
             </TableCell>
             <TableCell align="left" sx={{ fontWeight: "bold" }}>
               Nombre
+            </TableCell>
+            <TableCell align="left" sx={{ fontWeight: "bold" }}>
+              Apellidos
+            </TableCell>
+            <TableCell align="left" sx={{ fontWeight: "bold" }}>
+              Operaciones
             </TableCell>
           </TableRow>
         </TableHead>
@@ -59,6 +78,7 @@ const InicioClientes = () => {
             >
               <TableCell align="left">{cliente.rut}</TableCell>
               <TableCell align="left">{cliente.nombre}</TableCell>
+              <TableCell align="left">{cliente.apellidos}</TableCell>
             </TableRow>
           ))}
         </TableBody>

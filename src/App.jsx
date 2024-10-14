@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import Navbar from "./components/Navbar"
 import Home from './components/Home';
 import InicioClientes from './components/InicioClientes';
+import NuevoCliente from './components/NuevoCliente.jsx';
 /*import EmployeeList from './components/EmployeesList';
 import AddEditEmployee from './components/AddEditEmployee';
 import ExtraHoursList from './components/ExtraHoursList';
@@ -21,6 +22,7 @@ function App() {
               <Route path="/home" element={<Home/>} />
               <Route path="/" element={<Home/>} />
               <Route path="/clientes/inicio" element={<InicioClientes/>} />
+              <Route path="/clientes/nuevo" element={<NuevoCliente/>} />
             </Routes>
           </div>
       </Router>
