@@ -7,5 +7,12 @@ const create = (data) => {
   
     return httpClient.post("/api/v1/documentacion/", data, { headers });
   };
+
+const getByRut = (rut) => {
+    return httpClient.get(`/api/v1/documentacion/${rut}`,{
+    });
+  };
   
-  export default { create };
+  
+  
+  export default { create, getByRut };

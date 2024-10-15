@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import documentacionService from "../services/documentacion.service"; // Asegúrate de que la ruta es correcta
 import Box from "@mui/material/Box";
@@ -25,9 +25,49 @@ const DocumentosClientes= () => {
     cuentaAhorros: null
   });
 
+  useEffect(() => {
+    const fetchDocumentos = async () => {
+      try {
+        const response = await documentacionService.getByRut(rut);
+        const documento = response.data;
+        setFormData({
+          comprobanteIngresos: convertirBlob(documento.comprobanteIngresos),
+          escrituraVivienda: convertirBlob(documento.escrituraVivienda),
+          historialCrediticio: convertirBlob(documento.historialCrediticio),
+          certificadoAvaluo: convertirBlob(documento.certificadoAvaluo),
+          estadoNegocio: convertirBlob(documento.estadoNegocio),
+          planNegocio: convertirBlob(documento.planNegocio),
+          presupuestoRemodelacion: convertirBlob(documento.presupuestoRemodelacion),
+          certificadoAntiguedadLaboral: convertirBlob(documento.certificadoAntiguedadLaboral),
+          informeDeudas: convertirBlob(documento.informeDeudas),
+          fotocopiaRut: convertirBlob(documento.fotocopiaRut),
+          cuentaAhorros: convertirBlob(documento.cuentaAhorros),
+        });
+      } catch (error) {
+              console.error("Error al obtener los documentos", error);
+          }
+    };
+
+    fetchDocumentos();
+  }, [rut]);
+
+  const convertirBlob = (data) => {
+    if (!data) return null;
+    return new Blob([new Uint8Array(data)], { type: 'application/pdf' });
+  };
+
   const handleChange = (e) => {
     const { name, files } = e.target;
-    setFormData({ ...formData, [name]: files[0] });
+    if (files && files[0]) {
+      const file = files[0];
+  
+      // Verifica que sea un PDF
+      if (file.type !== 'application/pdf') {
+        alert('Por favor, sube un archivo PDF válido.');
+        return;
+      }
+      setFormData({ ...formData, [name]: file });
+    }
   };
 
   const guardaDocumentacion = async (e) => {
@@ -36,7 +76,7 @@ const DocumentosClientes= () => {
     data.append('rut', rut);
     for (let key in formData) {
       if (formData[key]) {
-        data.append(key, formData[key]);
+        data.append(key, formData[key], formData[key].name);
       }
     }
 
@@ -48,9 +88,16 @@ const DocumentosClientes= () => {
     }
   };
 
-  const renderFileInput = (label, name) => (
+  const renderFileInput = (label, name, file) => (
     <Paper elevation={3} style={{ padding: '16px', marginBottom: '16px' }}>
       <Typography variant="h6">{label}</Typography>
+      {file && (
+        <div>
+          <Typography variant="body2">Archivo existente: {file.name || 'documento.pdf'}</Typography>
+          {/* Enlace para abrir el PDF en una nueva pestaña */}
+          <a href={URL.createObjectURL(file)} target="_blank" rel="noopener noreferrer">Ver PDF</a>
+        </div>
+      )}
       <input type="file" name={name} onChange={handleChange} />
     </Paper>
   );
@@ -64,24 +111,23 @@ const DocumentosClientes= () => {
         <br></br>
       </Typography>
       <form onSubmit={guardaDocumentacion}>
-        {renderFileInput('Comprobante de Ingresos', 'comprobanteIngresos')}
-        {renderFileInput('Escritura Primera Vivienda', 'escrituraVivienda')}
-        {renderFileInput('Historial Crediticio', 'historialCrediticio')}
-        {renderFileInput('Certificado de Avalúo', 'certificadoAvaluo')}
-        {renderFileInput('Estado Financiero del Negocio', 'estadoNegocio')}
-        {renderFileInput('Plan de Negocios', 'planNegocio')}
-        {renderFileInput('Presupuesto de la Remodelación', 'presupuestoRemodelacion')}
-        {renderFileInput('Certificado de Antigüedad Laboral', 'certificadoAntiguedadLaboral')}
-        {renderFileInput('Informe de Deudas', 'informeDeudas')}
-        {renderFileInput('Fotocopia del RUT', 'fotocopiaRut')}
-        {renderFileInput('Resumen anual de la Cuenta de Ahorros', 'cuentaAhorros')}
+      {renderFileInput('Comprobante de Ingresos', 'comprobanteIngresos', formData.comprobanteIngresos)}
+        {renderFileInput('Escritura Primera Vivienda', 'escrituraVivienda', formData.escrituraVivienda)}
+        {renderFileInput('Historial Crediticio', 'historialCrediticio', formData.historialCrediticio)}
+        {renderFileInput('Certificado de Avalúo', 'certificadoAvaluo', formData.certificadoAvaluo)}
+        {renderFileInput('Estado Financiero del Negocio', 'estadoNegocio', formData.estadoNegocio)}
+        {renderFileInput('Plan de Negocios', 'planNegocio', formData.planNegocio)}
+        {renderFileInput('Presupuesto de la Remodelación', 'presupuestoRemodelacion', formData.presupuestoRemodelacion)}
+        {renderFileInput('Certificado de Antigüedad Laboral', 'certificadoAntiguedadLaboral', formData.certificadoAntiguedadLaboral)}
+        {renderFileInput('Informe de Deudas', 'informeDeudas', formData.informeDeudas)}
+        {renderFileInput('Fotocopia del RUT', 'fotocopiaRut', formData.fotocopiaRut)}
+        {renderFileInput('Resumen anual de la Cuenta de Ahorros', 'cuentaAhorros', formData.cuentaAhorros)}
         <Divider style={{ margin: '24px 0' }} />
         <Button variant="contained" color="primary" type="submit" fullWidth>
-          Enviar Documentos
+          Subir Documentos
         </Button>
       </form>
     </Container>
   );
 };
-
 export default DocumentosClientes;
