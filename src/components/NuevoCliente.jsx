@@ -40,12 +40,11 @@ const NuevoCliente = () => {
 
     const cliente = { rut, nombre, apellidos, edad, ingresos, saldo, saldoPositivo, antiguedadLaboral, 
         esMoroso, esIndependiente, esEstable, depositoRegular, deudaTotal, mayorRetiro12, mayorRetiro6, tiempoCuentaAhorros, totalDepositos, id};
-        //Crear nuevo empleado
+        //Crear nuevo cliente
         clienteService
         .create(cliente)
         .then((response) => {
             console.log("Se ha añadido un nuevo cliente.", response.data);
-            navigate("/clientes/inicio");
         })
         .catch((error) => {
             console.log(

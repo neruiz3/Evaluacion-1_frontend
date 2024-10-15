@@ -1,114 +1,77 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/Input";
-import SaveIcon from "@mui/icons-material/Save";
-import TextField from "@mui/icons-material/TextField";
-import TextField from "@mui/icons-material/TextField";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import documentacionService from "../services/documentacion.service"; // Asegúrate de que la ruta es correcta
 
+const DocumentosClientes= () => {
+  const { rut } = useParams();
+  const [formData, setFormData] = useState({
+    comprobanteIngresos: null,
+    escrituraVivienda: null,
+    historialCrediticio: null,
+    certificadoAvaluo: null,
+    estadoNegocio: null,
+    planNegocio: null,
+    presupuestoRemodelacion: null,
+  });
 
+  const handleChange = (e) => {
+    const { name, files } = e.target;
+    setFormData({ ...formData, [name]: files[0] });
+  };
 
-const tiposDocumentos = [
-    "Comprobante de ingresos",
-    "Historial crediticio",
-    "Escritura de la primera vivienda",
-    "Certificado de avalúo",
-    "Estado del negocio",
-    "Plan de negocio",
-    "Presupuesto de remodelación",
-  ];
+  const guardaDocumentacion = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append('rut', rut);
+    for (let key in formData) {
+      if (formData[key]) {
+        data.append(key, formData[key]);
+      }
+    }
 
-  const DocumentosClientes = () => {
-    const [documentoSeleccionado, setDocumentoSeleccionado] = useState("");
-    const [archivo, setArchivo] = useState(null);
-  
-    const handleDocumentoChange = (e) => {
-      setDocumentoSeleccionado(e.target.value);
-    };
-  
-    const handleArchivoChange = (e) => {
-      setArchivo(e.target.files[0]);
-    };
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      console.log("Documento seleccionado:", documentoSeleccionado);
-      console.log("Archivo cargado:", archivo);
-      // Aquí va la lógica para enviar los archivos al backend
-    };
-  
-    return (
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{ width: "60%", margin: "auto", mt: 4 }}
-      >
-        <h3>Subir Documentos</h3>
-        <hr />
-  
-        <Grid container spacing={2} alignItems="center">
-          {/* Selección del tipo de documento */}
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <TextField
-                select
-                label="Tipo de Documento"
-                value={documentoSeleccionado}
-                onChange={handleDocumentoChange}
-                variant="outlined"
-                required
-              >
-                {tiposDocumentos.map((doc, index) => (
-                  <MenuItem key={index} value={doc}>
-                    {doc}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </FormControl>
-          </Grid>
-  
-          {/* Selección del archivo */}
-          <Grid item xs={12} sm={6}>
-            <Button
-              variant="contained"
-              component="label"
-              startIcon={<UploadFileIcon />}
-              fullWidth
-            >
-              Seleccionar Archivo
-              <input
-                type="file"
-                hidden
-                onChange={handleArchivoChange}
-                accept="application/pdf"
-              />
-            </Button>
-            {archivo && <p>{archivo.name}</p>} {/* Muestra el nombre del archivo seleccionado */}
-          </Grid>
-        </Grid>
-  
-        {/* Botón de enviar */}
-        <Box mt={4} width="100%">
-          <Button
-            type="submit"
-            variant="contained"
-            color="success"
-            fullWidth
-            startIcon={<SaveIcon />}
-          >
+    try {
+      const response = await documentacionService.create(data);
+      console.log('Documentos enviados exitosamente', response.data);
+    } catch (error) {
+      console.error('Error al enviar los documentos', error);
+    }
+  };
+
+  return (
+    <Container maxWidth="md">
+      <Typography variant="h4" align="center" gutterBottom>
+        Añadir Documentos para el Cliente con RUT: {rut}
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <Box display="flex" flexDirection="column" alignItems="stretch" gap={3}>
+          <Typography variant="h6">Comprobante de Ingresos</Typography>
+          <input type="file" name="comprobanteIngresos" onChange={handleChange} />
+
+          <Typography variant="h6">Escritura Primera Vivienda</Typography>
+          <input type="file" name="escrituraVivienda" onChange={handleChange} />
+
+          <Typography variant="h6">Historial Crediticio</Typography>
+          <input type="file" name="historialCrediticio" onChange={handleChange} />
+
+          <Typography variant="h6">Certificado de Avalúo</Typography>
+          <input type="file" name="certificadoAvaluo" onChange={handleChange} />
+
+          <Typography variant="h6">Estado Financiero del Negocio</Typography>
+          <input type="file" name="estadoNegocio" onChange={handleChange} />
+
+          <Typography variant="h6">Plan de Negocios</Typography>
+          <input type="file" name="planNegocio" onChange={handleChange} />
+
+          <Typography variant="h6">Presupuesto de la Remodelación</Typography>
+          <input type="file" name="presupuestoRemodelacion" onChange={handleChange} />
+
+          <Button variant="contained" color="primary" type="submit" fullWidth>
             Enviar Documentos
           </Button>
         </Box>
-      </Box>
-    );
-  };
-  
-  export default DocumentosClientes;
+      </form>
+    </Container>
+  );
+};
+
+export default DocumentosClientes;
