@@ -1,14 +1,25 @@
-/*import httpClient from "../http-common"; // Asegúrate de que la ruta es correcta
+import httpClient from "../http-common";
 
 const getCreditos = () => {
-    return httpClient.get('/api/credito/');
+    return httpClient.get('/api/v1/credito/');
+}
+
+const getCreditosRut = (rut) => {
+    return httpClient.get('/api/v1/credito/cliente/${rut}');
 }
 
 const simularCredito = (data) => {
-    return httpClient.post("/api/credito/calculaSimulacion", data);
+    return httpClient.post("/api/v1/credito/calculaSimulacion", data);
 }
 
-const revisionInicial = (data) => {
+const getTiposPrestamos = () => {
+    return httpClient.get('/api/v1/credito/tipo-prestamo');
+}
+
+const create = (data) => {
+    return httpClient.post("/api/v1/credito/", data);
+}
+/*const revisionInicial = (data) => {
     return httpClient.delete(`/api/credito/revisaInicial`);
 }
 const crearCredito = (data) => {
@@ -25,17 +36,18 @@ const actualizarCredito = (data) => {
 
 const eliminarCredito = (id) => {
     return httpClient.delete(`/api/credito/${id}`);
-}
+}*/
 
 
 
 
 export default {
     getCreditos,
+    getCreditosRut,
     simularCredito,
-    crearCredito,
-    obtenerCredito,
-    actualizarCredito,
-    eliminarCredito
+    getTiposPrestamos,
+    create,
+    //obtenerCredito,
+    //actualizarCredito,
+    //eliminarCredito
 };
-*/

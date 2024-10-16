@@ -11,7 +11,9 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import CalculateIcon from "@mui/icons-material/Calculate";
 
 
 const InicioClientes = () => {
@@ -24,7 +26,7 @@ const InicioClientes = () => {
         .getAll()
         .then((response) => {
           console.log("Mostrando listado de todos los empleados.", response.data);
-          setClientes(response.data);
+          setClientes(response.data || []);
         })
         .catch((error) => {
           console.log(
@@ -37,6 +39,25 @@ const InicioClientes = () => {
     useEffect(() => {
       init();
     }, []);
+
+    const editaCliente = (id) => {
+      console.log("Printing id", id);
+      navigate(`/clientes/editar/${id}`);
+    };
+
+    const addDocumentos = (rut) => {
+      console.log("Printing rut", rut);
+      navigate(`/clientes/documentos/${rut}`);
+    };
+
+    const simulaCredito = () => {
+      navigate(`/clientes/simula`);
+    };
+
+    const solicitaCredito = (rut) => {
+      navigate(`/clientes/solicita-credito/${rut}`);
+    };
+
     return (
     <TableContainer component={Paper}>
       <br />
@@ -79,6 +100,48 @@ const InicioClientes = () => {
               <TableCell align="left">{cliente.rut}</TableCell>
               <TableCell align="left">{cliente.nombre}</TableCell>
               <TableCell align="left">{cliente.apellidos}</TableCell>
+              <TableCell>
+                <Button
+                  variant="contained"
+                  color="info"
+                  size="small"
+                  onClick={() => editaCliente(cliente.id)}
+                  style={{ marginLeft: "0.5rem" }}
+                  startIcon={<EditIcon />}
+                >
+                  Editar
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  onClick={() => addDocumentos(cliente.rut)}
+                  style={{ marginLeft: "0.5rem" }}
+                  startIcon={<AddIcon />}
+                >
+                  Añadir documentos
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  onClick={() => simulaCredito()}
+                  style={{ marginLeft: "0.5rem" }}
+                  startIcon={<CalculateIcon />}
+                >
+                  Simular un crédito
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  onClick={() => solicitaCredito(cliente.rut)}
+                  style={{ marginLeft: "0.5rem" }}
+                  startIcon={<AttachMoneyIcon />}
+                >
+                  Mis créditos
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

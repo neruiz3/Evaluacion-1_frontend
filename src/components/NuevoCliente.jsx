@@ -40,6 +40,21 @@ const NuevoCliente = () => {
 
     const cliente = { rut, nombre, apellidos, edad, ingresos, saldo, saldoPositivo, antiguedadLaboral, 
         esMoroso, esIndependiente, esEstable, depositoRegular, deudaTotal, mayorRetiro12, mayorRetiro6, tiempoCuentaAhorros, totalDepositos, id};
+      if(id) {
+      //Actualizar Datos Empelado
+      clienteService
+        .update(cliente)
+        .then((response) => {
+          console.log("Empleado ha sido actualizado.", response.data);
+          navigate("/clientes/inicio");
+        })
+        .catch((error) => {
+          console.log(
+            "Ha ocurrido un error al intentar actualizar datos del empleado.",
+            error
+          );
+        });
+    } else {
         //Crear nuevo cliente
         clienteService
         .create(cliente)
@@ -52,11 +67,43 @@ const NuevoCliente = () => {
             error
             );
         });
-    };
+    }
+  };
 
+  // Cargar datos del cliente si estamos en modo edición
   useEffect(() => {
-    setTitleClienteForm("NUEVO EMPLEADO");
-}, []);
+    if (id) {
+      setTitleClienteForm("Editando Cliente con RUT: {rut}");
+      clienteService
+        .get(id)
+        .then((response) => {
+          const cliente = response.data;
+          setRut(cliente.rut);
+          setNombre(cliente.nombre);
+          setApellidos(cliente.apellidos);
+          setEdad(cliente.edad);
+          setIngresos(cliente.ingresos);
+          setSaldo(cliente.saldo);
+          setSaldoPositivo(cliente.saldoPositivo);
+          setAntiguedadLaboral(cliente.antiguedadLaboral);
+          setEsMoroso(cliente.esMoroso);
+          setEsIndependiente(cliente.esIndependiente);
+          setEsEstable(cliente.esEstable);
+          setDepositoRegular(cliente.depositoRegular);
+          setDeudaTotal(cliente.deudaTotal);
+          setMayorRetiro12(cliente.mayorRetiro12);
+          setMayorRetiro6(cliente.mayorRetiro6);
+          setTiempoCuentaAhorros(cliente.tiempoCuentaAhorros);
+          setTotalDepositos(cliente.totalDepositos);
+        })
+        .catch((error) => {
+          console.error("Error al cargar los datos del cliente:", error);
+        });
+    }
+    else{
+      setTitleClienteForm("NUEVO CLIENTE");
+    }
+  }, [id]);
 
   return (
     <Box
@@ -236,7 +283,7 @@ const NuevoCliente = () => {
             type="number"
             value={tiempoCuentaAhorros}
             variant="standard"
-            onChange={(e) => setSaldo(e.target.value)}
+            onChange={(e) => setTiempoCuentaAhorros(e.target.value)}
             helperText="Antigüedad de la cuenta de ahorros, en años"
           />
         </FormControl>
