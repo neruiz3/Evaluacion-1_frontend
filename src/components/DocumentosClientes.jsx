@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
+import { Link } from 'react-router-dom';
 
 
 const DocumentosClientes = () => {
@@ -135,6 +136,7 @@ const DocumentosClientes = () => {
           Subir Documentos
         </Button>
       </form>
+      <Link to="/clientes/inicio">Volver a la lista de Clientes</Link>
     </Container>
   );
 };

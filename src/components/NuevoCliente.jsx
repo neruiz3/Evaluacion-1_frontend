@@ -9,7 +9,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -266,18 +266,6 @@ const NuevoCliente = () => {
         </FormControl>
         
         <FormControl>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => navigate(`/clientes/documentos/${rut}`)}
-            style={{ marginTop: "0.5rem" }}
-            startIcon={<AddIcon />}
-          >
-            Añadir Documentos
-          </Button>
-        </FormControl>
-
-        <FormControl>
           <br />
           <Button
             variant="contained"
@@ -289,6 +277,26 @@ const NuevoCliente = () => {
             GUARDAR
           </Button>
         </FormControl>
+        <br>
+        
+        </br>
+
+        <Typography align="center" style={{ marginBottom: '8px', fontWeight: 'bold', color: "secondary"}}>
+          Una vez guardado, añade documentos para que se puedan corroborar los datos indicados:
+        </Typography>
+
+        <FormControl>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => navigate(`/clientes/documentos/${rut}`)}
+            style={{ marginTop: "0.5rem" }}
+            startIcon={<AddIcon />}
+          >
+            Añadir Documentos
+          </Button>
+        </FormControl>
+        
       <hr />
       <Link to="/clientes/inicio">Volver a la lista de Clientes</Link>
     </Box>
