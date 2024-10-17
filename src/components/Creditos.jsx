@@ -9,6 +9,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import CheckIcon from '@mui/icons-material/Check';
+import CancelIcon from '@mui/icons-material/Cancel';
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import AddIcon from "@mui/icons-material/Add";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
@@ -18,14 +20,54 @@ const Creditos = () => {
     const { rut } = useParams();
     const navigate = useNavigate();
     const [creditos, setCreditos] = useState([]);
+
+    const formatearNombre = (nombre) => {
+        switch (nombre) {
+          case "PRIMERAVIVIENDA":
+            return "Primera Vivienda";
+          case "SEGUNDAVIVIENDA":
+            return "Segunda Vivienda";
+          case "COMERCIAL":
+            return "Propiedad Comercial";
+          case "REMODELACION":
+            return "Proyecto de Remodelación";
+          default:
+            return nombre;
+        }
+    };
     
+    const formatearEstado = (estado) => {
+        switch (estado) {
+          case "EN_REVISION_INICIAL":
+            return "En Revisión Inicial";
+          case "PENDIENTE_DOCUMENTACION":
+            return "Pendiente de Documentación";
+          case "EN_EVALUACION":
+            return "En Evaluación";
+          case "PRE_APROBADA":
+            return "Pre Aprobada";
+          case "EN_APROBACION_FINAL":
+            return "En Aprobación Final";
+          case "APROBADA":
+            return "Aprobada";
+          case "RECHAZADA":
+            return "Rechazada";
+          case "CANCELADA_POR_CLIENTE":
+            return "Cancelada por el Cliente";
+          case "EN_DESEMBOLSO":
+            return "En Desembolso";
+          default:
+            return estado;
+        }
+      };
+
     const buscarCreditos = async () => {
       creditoService
         .getCreditosRut(rut)
         .then((response) => {
           console.log("Mostrando listado de créditos.", response.data);
           setCreditos(response.data || []);
-          console.log(response.data);
+          console.log(rut);
         })
         .catch((error) => {
           console.log(
@@ -44,17 +86,31 @@ const Creditos = () => {
         navigate(`/clientes/documentos/${rut}`);
       };
     
+
+    const cambiarEstado = (id, estado) => {
+        console.log('Enviando estado:', estado);
+        creditoService
+            .actualizarEstado(id, estado)
+            .then(() => {
+                console.log("Estado actualizado.");
+                buscarCreditos();  // Actualiza la lista de créditos
+            })
+            .catch((error) => {
+                console.error("Error al actualizar el estado.", error);
+            });
+    };
+
     return  (
         <TableContainer component={Paper}>
           <br />
           <Link
-            to="/clientes/credito/nuevo/${rut}"
+             to={`/clientes/credito/nuevo/${rut}`}
             style={{ textDecoration: "none", marginBottom: "1rem" }}
           >
             <Button
               variant="contained"
               color="primary"
-              startIcon={<PersonAddIcon />}
+              startIcon={<AddIcon />}
             >
               Solicitar un nuevo crédito
             </Button>
@@ -67,10 +123,10 @@ const Creditos = () => {
                   Rut
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  Plazo
+                  Plazo (años)
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  Tasa de interés
+                  Tasa de interés (%)
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
                   Monto
@@ -80,9 +136,6 @@ const Creditos = () => {
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
                   Valor de la propiedad
-                </TableCell>
-                <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  Cuota mensual
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
                   Estado
@@ -99,32 +152,49 @@ const Creditos = () => {
                   <TableCell align="left">{credito.plazo}</TableCell>
                   <TableCell align="left">{credito.tasaInteres}</TableCell>
                   <TableCell align="left">{credito.monto}</TableCell>
-                  <TableCell align="left">{credito.tipoPrestamo}</TableCell>
+                  <TableCell align="left">{formatearNombre(credito.tipoPrestamo)}</TableCell>
                   <TableCell align="left">{credito.valorPropiedad}</TableCell>
-                  <TableCell align="left">{credito.cuotaMensual}</TableCell>
-                  <TableCell align="left">{credito.estado}</TableCell>
+                  <TableCell align="left">{formatearEstado(credito.estado)}</TableCell>
                   <TableCell>
                     <Button
                       variant="contained"
                       color="info"
                       size="small"
-                      onClick={() => addDocumentos(cliente.id)}
+                      onClick={() => addDocumentos(credito.rut)}
                       style={{ marginLeft: "0.5rem" }}
                       startIcon={<AddIcon />}
                     >
                       Añadir documentación
                     </Button>
+                  </TableCell>
+                  <TableCell>
                     <Button
                       variant="contained"
-                      color="secondary"
+                      color="error"
                       size="small"
-                      onClick={() => solicitaCredito(cliente.rut)}
+                      onClick={() => cambiarEstado(credito.id, "CANCELADA_POR_CLIENTE")}
                       style={{ marginLeft: "0.5rem" }}
-                      startIcon={<AttachMoneyIcon />}
+                      startIcon={<CancelIcon />}
                     >
-                      Mis créditos
+                      Cancelar
                     </Button>
                   </TableCell>
+
+                  {credito.estado === "PRE_APROBADA" && (
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="success"
+                        size="small"
+                        onClick={() => cambiarEstado(credito.id, "EN_APROBACION_FINAL")}
+                        style={{ marginLeft: "0.5rem" }}
+                        startIcon={<CheckIcon />}
+                      >
+                        Aceptar condiciones
+                      </Button>
+                    </TableCell>
+                    )}
+
                 </TableRow>
               ))}
             </TableBody>

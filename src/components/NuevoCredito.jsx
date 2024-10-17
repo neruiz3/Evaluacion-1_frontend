@@ -21,13 +21,11 @@ const NuevoCredito = () => {
     const [tasaInteres, setTasaInteres] = useState(0.0);
     const [tipoPrestamo, setTipoPrestamo] = useState(""); // Enum as string
     const [valorPropiedad, setValorPropiedad] = useState(0);
-    const [estado, setEstado] = useState("");
     const [tiposPrestamo, setTiposPrestamo] = useState([]);
-    const [cuotaMensual, setCuotaMensual] = useState(0.0);
     const [selectedTipo, setSelectedTipo] = useState("");
     const navigate = useNavigate();
     const { rut } = useParams();
-    const {id} = useParams();
+    const { id } = useParams();
 
     const formatearNombre = (nombre) => {
         switch (nombre) {
@@ -47,11 +45,13 @@ const NuevoCredito = () => {
     const guardaCredito = (e) => {
         e.preventDefault();
 
-        const credito = { rut, plazo, tasaInteres, monto, tipoPrestamo, valorPropiedad, cuotaMensual, estado, id};
+        const credito = {rut, plazo, tasaInteres, monto, tipoPrestamo, valorPropiedad, id};
+        console.log(rut);
         creditoService
             .create(credito)
             .then((response) => {
                 console.log("Se ha añadido un nuevo credito.", response.data);
+                navigate(`/clientes/solicita-credito/${rut}`);
             })
             .catch((error) => {
                 console.log(
@@ -77,10 +77,8 @@ const NuevoCredito = () => {
     }, []);
 
     const handleTipoChange = (event) => {
-        setSelectedTipo(event.target.value);
+        setTipoPrestamo(event.target.value);
         console.log(selectedTipo);
-        const tipoSeleccionado = tiposPrestamo.find(tipo => tipo.nombre === event.target.value);
-        setTipoPrestamo(tipoSeleccionado);
     };
 
   return (
@@ -118,7 +116,7 @@ const NuevoCredito = () => {
                     required
                 />
                 <TextField
-                    label="Tasa de interés (%)"
+                    label="Valor de la propiedad"
                     type="number"
                     value={valorPropiedad}
                     onChange={(e) => setValorPropiedad(e.target.value)}
@@ -129,7 +127,7 @@ const NuevoCredito = () => {
                 <TextField
                     select
                     label="Tipo de Préstamo"
-                    value={selectedTipo}
+                    value={tipoPrestamo}
                     onChange={handleTipoChange}
                     fullWidth
                     margin="normal"
@@ -146,7 +144,7 @@ const NuevoCredito = () => {
                     Solicitar
                 </Button>
             </form>
-        <Link to="/clientes/inicio">Volver a la lista de Clientes</Link>
+        <Link to={`/clientes/solicita-credito/${rut}`}> Volver a mi lsta de créditos</Link>
         </Box>
     </Container>
     );
