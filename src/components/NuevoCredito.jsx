@@ -167,7 +167,7 @@ const NuevoCredito = () => {
                     ))}
                 </tbody>
             </table>
-        <Link to={`/clientes/solicita-credito/${rut}`}> Volver a mi lsta de créditos</Link>
+        <Link to={`/clientes/solicita-credito/${rut}`}> Volver a mi lista de créditos</Link>
         </Box>
     </Container>
     );

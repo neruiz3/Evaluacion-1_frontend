@@ -26,14 +26,8 @@ const InfoCredito = () => {
     const [cliente, setCliente] = useState({});
     const [credito, setCredito] = useState({});
     const [error, setError] = useState(null);
-    const [formData, setFormData] = useState({
-        comprobanteIngresos: null,
-        historialCrediticio: null,
-        certificadoAntiguedadLaboral: null,
-        informeDeudas: null,
-        fotocopiaRut: null,
-        cuentaAhorros: null
-    });
+    const [documentacion, setDocumentacion] = useState({});
+    
     const {id} = useParams();
     
     const navigate = useNavigate();
@@ -53,15 +47,7 @@ const InfoCredito = () => {
         .then(documentacionResponse => {
             const documento = documentacionResponse.data; // Asegúrate de obtener los datos correctamente
             console.log(documento);
-
-            setFormData({
-                comprobanteIngresos: documento.comprobanteIngresos ? `data:application/pdf;base64,${documento.comprobanteIngresos}` : null,
-                historialCrediticio: documento.historialCrediticio ? `data:application/pdf;base64,${documento.historialCrediticio}` : null,
-                certificadoAntiguedadLaboral: documento.certificadoAntiguedadLaboral ? `data:application/pdf;base64,${documento.certificadoAntiguedadLaboral}` : null,
-                informeDeudas: documento.informeDeudas ? `data:application/pdf;base64,${documento.informeDeudas}` : null,
-                fotocopiaRut: documento.fotocopiaRut ? `data:application/pdf;base64,${documento.fotocopiaRut}` : null,
-                cuentaAhorros: documento.cuentaAhorros ? `data:application/pdf;base64,${documento.cuentaAhorros}` : null,
-            });
+            setDocumentacion(documento);
         })
         .catch(error => {
             console.error('Error al obtener información:', error);
@@ -94,22 +80,40 @@ const InfoCredito = () => {
         });
     };
 
-    const renderFileLink = (label, file) => {
+    const renderPdfViewer = (label, base64Data) => {
+        if (!base64Data) {
+            return (
+                <TableRow>
+                    <TableCell>{label}:</TableCell>
+                    <TableCell>
+                        <Typography color="textSecondary">No disponible</Typography>
+                    </TableCell>
+                </TableRow>
+            );
+        }
+
+        const pdfData = `data:application/pdf;base64,${base64Data}`;
+
         return (
             <TableRow>
                 <TableCell>{label}:</TableCell>
                 <TableCell>
-                    {file ? (
-                        <a href={file} target="_blank" rel="noopener noreferrer">
-                            Ver Documento
-                        </a>
-                    ) : (
-                        <Typography color="textSecondary">No hay documento subido.</Typography>
-                    )}
+                    <iframe
+                        src={pdfData}
+                        width="100%"
+                        height="500px"
+                        style={{ border: "none" }}
+                        title={label}
+                    />
                 </TableCell>
             </TableRow>
         );
     };
+
+    if (error) {
+        return <Typography color="error">{error}</Typography>;
+    }
+
 
 
     const evaluaCredito = (e) => {
@@ -134,7 +138,7 @@ const InfoCredito = () => {
             <Table size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell colSpan={2} sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+                        <TableCell colSpan={2} sx={{ fontWeight: 'bold', fontSize: '1.2rem'}}>
                             Información del Cliente
                         </TableCell>
                     </TableRow>
@@ -158,7 +162,7 @@ const InfoCredito = () => {
                             <TextField 
                                 type="number"
                                 name="ingresos"
-                                value={cliente.ingresos}
+                                value={cliente.ingresos?.toFixed(2)||"0.00"}
                                 onChange={handleChange}
                                 size="small"
                                 fullWidth
@@ -226,7 +230,7 @@ const InfoCredito = () => {
                             <TextField 
                                 type="number" 
                                 name="deudaTotal" 
-                                value={cliente.deudaTotal} 
+                                value={cliente.deudaTotal?.toFixed(2)||"0.00"} 
                                 onChange={handleChange} 
                                 size="small" 
                                 fullWidth 
@@ -239,7 +243,7 @@ const InfoCredito = () => {
                             <TextField 
                                 type="number" 
                                 name="saldo" 
-                                value={cliente.saldo} 
+                                value={cliente.saldo?.toFixed(2)||"0.00"} 
                                 onChange={handleChange} 
                                 size="small" 
                                 fullWidth 
@@ -252,7 +256,7 @@ const InfoCredito = () => {
                             <TextField 
                                 type="number" 
                                 name="mayorRetiro6" 
-                                value={cliente.mayorRetiro6} 
+                                value={cliente.mayorRetiro6?.toFixed(2)||"0.00"} 
                                 onChange={handleChange} 
                                 size="small" 
                                 fullWidth 
@@ -265,7 +269,7 @@ const InfoCredito = () => {
                             <TextField
                                 name="totalDepositos"
                                 type="number"
-                                value={cliente.totalDepositos}
+                                value={cliente.totalDepositos?.toFixed(2)||"0.00"}
                                 onChange={handleChange}
                                 size="small" 
                                 fullWidth 
@@ -292,7 +296,7 @@ const InfoCredito = () => {
                             <TextField 
                                 type="number" 
                                 name="mayorRetiro12" 
-                                value={cliente.mayorRetiro12} 
+                                value={cliente.mayorRetiro12?.toFixed(2)||"0.00"} 
                                 onChange={handleChange} 
                                 size="small" 
                                 fullWidth 
@@ -306,7 +310,7 @@ const InfoCredito = () => {
                             <TextField
                                 name="antiguedadCuenta"
                                 type="number"
-                                value={cliente.tiempoCuentaAhorros}
+                                value={cliente.tiempoCuentaAhorros?.toFixed(2)||"0.00"}
                                 onChange={(e) => {handleChange}}
                                 size="small" 
                                 fullWidth 
@@ -315,33 +319,6 @@ const InfoCredito = () => {
                     </TableRow>
                 </TableBody>
             </Table>
-            <Container>
-            <Divider sx={{ my: 2 }} />
-                <Typography variant="h6" align="center" gutterBottom>
-                    Documentos
-                </Typography>
-                <TableContainer component={Paper}>
-                    <Table size="small">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell colSpan={2} sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
-                                    Documentos Cargados
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {renderFileLink('Comprobante de Ingresos', formData.comprobanteIngresos)}
-                            {renderFileLink('Historial Crediticio', formData.historialCrediticio)}
-                            {renderFileLink('Certificado de Antigüedad Laboral', formData.certificadoAntiguedadLaboral)}
-                            {renderFileLink('Informe de Deudas', formData.informeDeudas)}
-                            {renderFileLink('Fotocopia de RUT', formData.fotocopiaRut)}
-                            {renderFileLink('Cuenta de Ahorros', formData.cuentaAhorros)}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Container>
-
-
             <Button 
                 variant="contained" 
                 color="primary" 
@@ -350,10 +327,27 @@ const InfoCredito = () => {
             >
                 Guardar Cambios
             </Button>
-
+            <Container>
+            <Divider sx={{ my: 2 }} />
+                <Typography variant="h6" align="center" gutterBottom fontWeight='bold'>
+                    Documentos para comprobar los datos del cliente:
+                </Typography>
+                <TableContainer component={Paper}>
+                <Table size="small">
+                    <TableBody>
+                        {renderPdfViewer("Comprobante de Ingresos", documentacion.comprobanteIngresos)}
+                        {renderPdfViewer("Historial Crediticio", documentacion.historialCrediticio)}
+                        {renderPdfViewer("Certificado Antigüedad Laboral", documentacion.certificadoAntiguedadLaboral)}
+                        {renderPdfViewer("Informe Deudas", documentacion.informeDeudas)}
+                        {renderPdfViewer("Fotocopia RUT", documentacion.fotocopiaRut)}
+                        {renderPdfViewer("Cuenta Ahorros", documentacion.cuentaAhorros)}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            </Container>
             <Button 
                 variant="contained" 
-                color="primary" 
+                color="success" 
                 onClick={evaluaCredito} 
                 sx={{ marginTop: '1rem' }}
             >

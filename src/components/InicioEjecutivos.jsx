@@ -13,7 +13,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/Check";
-import CalculateIcon from "@mui/icons-material/Calculate";
+import InfoIcon from "@mui/icons-material/Info";
 
 
 const InicioEjecutivos = () => {
@@ -42,6 +42,11 @@ const InicioEjecutivos = () => {
     const visualizaInfo = (id) => {
       navigate(`/ejecutivos/credito-info/${id}`);
     };
+
+    const detallar = (id) => {
+        navigate(`/ejecutivos/info/${id}`);
+      };
+  
 
     const elimina = (id) => {
         creditoService
@@ -74,6 +79,19 @@ const InicioEjecutivos = () => {
         });
       };
 
+      const cambiarEstado = (id, estado) => {
+        console.log('Enviando estado:', estado);
+        creditoService
+            .actualizarEstado(id, estado)
+            .then(() => {
+                console.log("Estado actualizado.");
+                init();  // Actualiza la lista de créditos
+            })
+            .catch((error) => {
+                console.error("Error al actualizar el estado.", error);
+            });
+    };
+
     return (
     <TableContainer component={Paper}>
       <br />
@@ -103,6 +121,17 @@ const InicioEjecutivos = () => {
               <TableCell align="left">{credito.rut}</TableCell>
               <TableCell align="left">{credito.tipoPrestamo}</TableCell>
               <TableCell align="left">{credito.estado}</TableCell>
+
+              <Button
+                variant="contained"
+                color="info"
+                size="small"
+                onClick={() => detallar(credito.id)}
+                style={{ marginLeft: "0.5rem" }}
+                startIcon={<InfoIcon />}
+                >
+                Información detallada
+                </Button>
               
                 {credito.estado === "EN_EVALUACION" && (
                 <TableCell>
@@ -143,6 +172,34 @@ const InicioEjecutivos = () => {
                     startIcon={<CheckIcon />}
                     >
                     Eliminar solicitud
+                    </Button>
+                </TableCell>
+                )}
+                {credito.estado === "EN_APROBACION_FINAL" && (
+                <TableCell>
+                    <Button
+                    variant="contained"
+                    color="success"
+                    size="small"
+                    onClick={() => cambiarEstado(credito.id, "APROBADA")}
+                    style={{ marginLeft: "0.5rem" }}
+                    startIcon={<CheckIcon />}
+                    >
+                    Aprobar
+                    </Button>
+                </TableCell>
+                )}
+                {credito.estado === "APROBADA" && (
+                <TableCell>
+                    <Button
+                    variant="contained"
+                    color="success"
+                    size="small"
+                    onClick={() => cambiarEstado(credito.id, "EN_DESEMBOLSO")}
+                    style={{ marginLeft: "0.5rem" }}
+                    startIcon={<CheckIcon />}
+                    >
+                    Lista para el Desembolso
                     </Button>
                 </TableCell>
                 )}

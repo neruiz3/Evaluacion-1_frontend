@@ -25,7 +25,7 @@ const NuevoCliente = () => {
   const [esMoroso, setEsMoroso] = useState(false);
   const [esIndependiente, setEsIndependiente] = useState(false);
   const [esEstable, setEsEstable] = useState(false);
-  const [depositoRegular, setDepositoRegular] = useState("");
+  const [depositoRegular, setDepositoRegular] = useState(false);
   const [deudaTotal, setDeudaTotal] = useState("");
   const [mayorRetiro12, setMayorRetiro12] = useState("");
   const [mayorRetiro6, setMayorRetiro6] = useState("");
@@ -73,7 +73,7 @@ const NuevoCliente = () => {
   // Cargar datos del cliente si estamos en modo edición
   useEffect(() => {
     if (id) {
-      setTitleClienteForm("Editando Cliente con RUT: {rut}");
+      setTitleClienteForm("Editando Cliente:");
       clienteService
         .get(id)
         .then((response) => {
@@ -262,7 +262,19 @@ const NuevoCliente = () => {
           </RadioGroup>
         </FormControl>
 
-        {saldoPositivo && (
+        <FormControl component="fieldset">
+          <FormLabel component="legend">¿Realiza depósitos en la cuenta mensual o trimestralmente?</FormLabel>
+          <RadioGroup
+            row
+            value={depositoRegular  ? "true" : "false"}
+            onChange={(e) => setDepositoRegular(e.target.value === "true")}
+          >
+            <FormControlLabel value="true" control={<Radio />} label="Sí" />
+            <FormControlLabel value="false" control={<Radio />} label="No" />
+          </RadioGroup>
+        </FormControl>
+
+        {depositoRegular && (
           <FormControl fullWidth>
           <TextField
             id="totalDepositos"

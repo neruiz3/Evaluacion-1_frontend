@@ -40,6 +40,9 @@ const evaluar = (data) => {
     return httpClient.put('/api/v1/credito/evaluar', data);
 }
 
+const costoTotal = (data) => {
+    return httpClient.post('/api/v1/credito/costoTotal', data);
+}
 
 /*const revisionInicial = (data) => {
     return httpClient.delete(`/api/credito/revisaInicial`);
@@ -68,6 +71,7 @@ export default {
     actualizarEstado,
     revisionInicial,
     evaluar,
+    costoTotal,
     //obtenerCredito,
     //actualizarCredito,
     //eliminarCredito

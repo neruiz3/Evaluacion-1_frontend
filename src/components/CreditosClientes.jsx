@@ -11,7 +11,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import InfoIcon from "@mui/icons-material/Info";
 import AddIcon from "@mui/icons-material/Add";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
@@ -85,6 +85,10 @@ const Creditos = () => {
         console.log("Printing rut", rut);
         navigate(`/clientes/documentos/${rut}`);
       };
+
+    const calculaCosto = (id) => {
+      navigate(`/clientes/costo-total/${id}`);
+    };
     
     const revision = (credito) => {
       creditoService
@@ -152,6 +156,9 @@ const Creditos = () => {
                   Tasa de interés
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                  CuotaMensual
+                </TableCell>
+                <TableCell align="left" sx={{ fontWeight: "bold" }}>
                   Estado
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
@@ -171,6 +178,7 @@ const Creditos = () => {
                   <TableCell align="left">{credito.monto.toFixed(2)}</TableCell>
                   <TableCell align="left">{credito.plazo} años</TableCell>
                   <TableCell align="left">{credito.tasaInteres.toFixed(2)} %</TableCell>
+                  <TableCell align="left">{credito.coutaMensual?.toFixed(2)||"0.00"}</TableCell>
                   <TableCell align="left">{formatearEstado(credito.estado)}</TableCell>
                   {credito.estado === "PENDIENTE_DOCUMENTACION" && (
                     <TableCell>
@@ -210,6 +218,18 @@ const Creditos = () => {
                       startIcon={<CancelIcon />}
                     >
                       Cancelar
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="info"
+                      size="small"
+                      onClick={() => calculaCosto(credito.id)}
+                      style={{ marginLeft: "0.5rem" }}
+                      startIcon={<InfoIcon />}
+                    >
+                      Costo Total
                     </Button>
                   </TableCell>
 
