@@ -31,6 +31,12 @@ export default function Sidemenu({ open, toggleDrawer }) {
           </ListItemIcon>
           <ListItemText primary="Clientes" />
         </ListItemButton>
+        <ListItemButton onClick={() => navigate("/ejecutivos/inicio")}>
+          <ListItemIcon>
+            <PeopleAltIcon />
+          </ListItemIcon>
+          <ListItemText primary="Ejecutivos" />
+        </ListItemButton>
 
         <Divider />
       </List>

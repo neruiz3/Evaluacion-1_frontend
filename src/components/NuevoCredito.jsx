@@ -144,6 +144,29 @@ const NuevoCredito = () => {
                     Solicitar
                 </Button>
             </form>
+            <br></br>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                    <tr>
+                    <th style={{ border: "1px solid black", padding: "8px" }}>Tipo de Préstamo</th>
+                    <th style={{ border: "1px solid black", padding: "8px" }}>Tasa de Interés mímima</th>
+                    <th style={{ border: "1px solid black", padding: "8px" }}>Tasa de Interés máxima</th>
+                    <th style={{ border: "1px solid black", padding: "8px" }}>Monto Máximo</th>
+                    <th style={{ border: "1px solid black", padding: "8px" }}>Plazo Máximo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {tiposPrestamo.map((prestamo, index) => (
+                    <tr key={index}>
+                        <td style={{ border: "1px solid black", padding: "8px" }}>{formatearNombre(prestamo.nombre)}</td>
+                        <td style={{ border: "1px solid black", padding: "8px" }}>{prestamo.tasaInteresMinima}%</td>
+                        <td style={{ border: "1px solid black", padding: "8px" }}>{prestamo.tasaInteresMaxima}%</td>
+                        <td style={{ border: "1px solid black", padding: "8px" }}>{prestamo.montoMaximo}% del valor de la propiedad</td>
+                        <td style={{ border: "1px solid black", padding: "8px" }}>{prestamo.plazoMaximo} años</td>
+                    </tr>
+                    ))}
+                </tbody>
+            </table>
         <Link to={`/clientes/solicita-credito/${rut}`}> Volver a mi lsta de créditos</Link>
         </Box>
     </Container>

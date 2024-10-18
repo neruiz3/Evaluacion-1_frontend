@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import CheckIcon from "@mui/icons-material/Check";
 import CalculateIcon from "@mui/icons-material/Calculate";
 
 
@@ -22,14 +22,14 @@ const InicioEjecutivos = () => {
   
     const init = () => {
       creditoService
-        .getAll()
+        .getCreditos()
         .then((response) => {
-          console.log("Mostrando listado de todos los empleados.", response.data);
-          setClientes(response.data || []);
+          console.log("Mostrando listado de todos los creditos.", response.data);
+          setCreditos(response.data || []);
         })
         .catch((error) => {
           console.log(
-            "Se ha producido un error al intentar mostrar listado de todos los empleados.",
+            "Se ha producido un error al intentar mostrar listado de todos los creditos.",
             error
           );
         });
@@ -39,51 +39,55 @@ const InicioEjecutivos = () => {
       init();
     }, []);
 
-    const editaCliente = (id) => {
-      console.log("Printing id", id);
-      navigate(`/clientes/editar/${id}`);
+    const visualizaInfo = (id) => {
+      navigate(`/ejecutivos/credito-info/${id}`);
     };
 
-    const addDocumentos = (rut) => {
-      console.log("Printing rut", rut);
-      navigate(`/clientes/documentos/${rut}`);
-    };
+    const elimina = (id) => {
+        creditoService
+        .remove(id)
+        .then((response) => {
+            console.log("Solicitud eliminada de la lista.", response.data);
+            init();
+          })
+          .catch((error) => {
+            console.log(
+              "No se ha podido eliminar.",
+              error
+            );
+          });
+      };
+  
 
-    const simulaCredito = () => {
-      navigate(`/clientes/simula`);
-    };
-
-    const solicitaCredito = (rut) => {
-      navigate(`/clientes/solicita-credito/${rut}`);
-    };
+    const compruebaDocs = (credito) => {
+        creditoService
+        .revisionInicial(credito)
+        .then((response) => {
+          console.log("Revisando documentos.", response.data);
+          init();
+        })
+        .catch((error) => {
+          console.log(
+            "Se ha producido un error al intentar revisar la documentación.",
+            error
+          );
+        });
+      };
 
     return (
     <TableContainer component={Paper}>
       <br />
-      <Link
-        to="/clientes/nuevo"
-        style={{ textDecoration: "none", marginBottom: "1rem" }}
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<PersonAddIcon />}
-        >
-          Añadir Cliente
-        </Button>
-      </Link>
-      <br /> <br />
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
             <TableCell align="left" sx={{ fontWeight: "bold" }}>
-              Rut
+              Rut del Cliente
             </TableCell>
             <TableCell align="left" sx={{ fontWeight: "bold" }}>
-              Nombre
+              Tipo de préstamo
             </TableCell>
             <TableCell align="left" sx={{ fontWeight: "bold" }}>
-              Apellidos
+              Estado de solicitud
             </TableCell>
             <TableCell align="left" sx={{ fontWeight: "bold" }}>
               Operaciones
@@ -91,56 +95,57 @@ const InicioEjecutivos = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {clientes.map((cliente) => (
+          {creditos.map((credito) => (
             <TableRow
-              key={cliente.id}
+              key={credito.id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              <TableCell align="left">{cliente.rut}</TableCell>
-              <TableCell align="left">{cliente.nombre}</TableCell>
-              <TableCell align="left">{cliente.apellidos}</TableCell>
-              <TableCell>
+              <TableCell align="left">{credito.rut}</TableCell>
+              <TableCell align="left">{credito.tipoPrestamo}</TableCell>
+              <TableCell align="left">{credito.estado}</TableCell>
+              
+                {credito.estado === "EN_EVALUACION" && (
+                <TableCell>
                 <Button
-                  variant="contained"
-                  color="info"
-                  size="small"
-                  onClick={() => editaCliente(cliente.id)}
-                  style={{ marginLeft: "0.5rem" }}
-                  startIcon={<EditIcon />}
-                >
-                  Editar
+                    variant="contained"
+                    color="info"
+                    size="small"
+                    onClick={() => visualizaInfo(credito.id)}
+                    style={{ marginLeft: "0.5rem" }}
+                    startIcon={<AddIcon />}
+                    >
+                    Evaluar
                 </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  size="small"
-                  onClick={() => addDocumentos(cliente.rut)}
-                  style={{ marginLeft: "0.5rem" }}
-                  startIcon={<AddIcon />}
-                >
-                  Añadir documentos
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  size="small"
-                  onClick={() => simulaCredito()}
-                  style={{ marginLeft: "0.5rem" }}
-                  startIcon={<CalculateIcon />}
-                >
-                  Simular un crédito
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  size="small"
-                  onClick={() => solicitaCredito(cliente.rut)}
-                  style={{ marginLeft: "0.5rem" }}
-                  startIcon={<AttachMoneyIcon />}
-                >
-                  Mis créditos
-                </Button>
-              </TableCell>
+                </TableCell>
+                )}
+                {credito.estado === "EN_REVISION_INICIAL" && (
+                        <TableCell>
+                        <Button
+                            variant="contained"
+                            color="success"
+                            size="small"
+                            onClick={() => compruebaDocs(credito)}
+                            style={{ marginLeft: "0.5rem" }}
+                            startIcon={<CheckIcon />}
+                        >
+                            Checkea documentacion
+                        </Button>
+                        </TableCell>
+                        )}
+                {credito.estado === "CANCELADA_POR_CLIENTE" && (
+                <TableCell>
+                    <Button
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    onClick={() => elimina(credito.id)}
+                    style={{ marginLeft: "0.5rem" }}
+                    startIcon={<CheckIcon />}
+                    >
+                    Eliminar solicitud
+                    </Button>
+                </TableCell>
+                )}
             </TableRow>
           ))}
         </TableBody>

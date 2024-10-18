@@ -86,6 +86,20 @@ const Creditos = () => {
         navigate(`/clientes/documentos/${rut}`);
       };
     
+    const revision = (credito) => {
+      creditoService
+        .revisionInicial(credito)
+        .then((response) => {
+          console.log("Revisando documentos.", response.data);
+          buscarCreditos();
+        })
+        .catch((error) => {
+          console.log(
+            "Se ha producido un error al intentar revisar la documentación.",
+            error
+          );
+        });
+    };
 
     const cambiarEstado = (id, estado) => {
         console.log('Enviando estado:', estado);
@@ -123,22 +137,25 @@ const Creditos = () => {
                   Rut
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  Plazo (años)
+                  Valor de la propiedad
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  Tasa de interés (%)
+                  Tipo de préstamo solicitado
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
                   Monto
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  Tipo de prestamo
+                  Plazo
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
-                  Valor de la propiedad
+                  Tasa de interés
                 </TableCell>
                 <TableCell align="left" sx={{ fontWeight: "bold" }}>
                   Estado
+                </TableCell>
+                <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                  Operaciones disponibles para la solicitud
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -149,24 +166,40 @@ const Creditos = () => {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell align="left">{credito.rut}</TableCell>
-                  <TableCell align="left">{credito.plazo}</TableCell>
-                  <TableCell align="left">{credito.tasaInteres}</TableCell>
-                  <TableCell align="left">{credito.monto}</TableCell>
+                  <TableCell align="left">{credito.valorPropiedad.toFixed(2)}</TableCell>
                   <TableCell align="left">{formatearNombre(credito.tipoPrestamo)}</TableCell>
-                  <TableCell align="left">{credito.valorPropiedad}</TableCell>
+                  <TableCell align="left">{credito.monto.toFixed(2)}</TableCell>
+                  <TableCell align="left">{credito.plazo} años</TableCell>
+                  <TableCell align="left">{credito.tasaInteres.toFixed(2)} %</TableCell>
                   <TableCell align="left">{formatearEstado(credito.estado)}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      color="info"
-                      size="small"
-                      onClick={() => addDocumentos(credito.rut)}
-                      style={{ marginLeft: "0.5rem" }}
-                      startIcon={<AddIcon />}
-                    >
-                      Añadir documentación
-                    </Button>
-                  </TableCell>
+                  {credito.estado === "PENDIENTE_DOCUMENTACION" && (
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="info"
+                        size="small"
+                        onClick={() => addDocumentos(credito.rut)}
+                        style={{ marginLeft: "0.5rem" }}
+                        startIcon={<AddIcon />}
+                      >
+                        Añadir documentación
+                      </Button>
+                    </TableCell>
+                    )}
+                  {credito.estado === "PENDIENTE_DOCUMENTACION" && (
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="info"
+                        size="small"
+                        onClick={() => revision(credito)}
+                        style={{ marginLeft: "0.5rem" }}
+                        startIcon={<AddIcon />}
+                      >
+                        Solicitar revision
+                      </Button>
+                    </TableCell>
+                    )}
                   <TableCell>
                     <Button
                       variant="contained"

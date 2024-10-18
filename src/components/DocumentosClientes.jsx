@@ -137,6 +137,8 @@ const DocumentosClientes = () => {
         </Button>
       </form>
       <Link to="/clientes/inicio">Volver a la lista de Clientes</Link>
+      <br />
+      <Link to={`/clientes/solicita-credito/${rut}`}>Volver a la lista de Créditos</Link>
     </Container>
   );
 };

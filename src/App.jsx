@@ -6,8 +6,10 @@ import InicioClientes from './components/InicioClientes';
 import NuevoCliente from './components/NuevoCliente.jsx';
 import DocumentosClientes from './components/DocumentosClientes.jsx';
 import SimularCredito from './components/SimularCredito.jsx';
-import Creditos from './components/Creditos.jsx';
+import Creditos from './components/CreditosClientes.jsx';
 import NuevoCredito from './components/NuevoCredito.jsx';
+import InicioEjecutivos from './components/InicioEjecutivos.jsx';
+import InfoCredito from './components/InfoCredito.jsx';
 /*import EmployeeList from './components/EmployeesList';
 import AddEditEmployee from './components/AddEditEmployee';
 import ExtraHoursList from './components/ExtraHoursList';
@@ -32,6 +34,8 @@ function App() {
               <Route path="/clientes/simula" element={<SimularCredito/>} />
               <Route path="/clientes/solicita-credito/:rut" element={<Creditos/>} />
               <Route path="/clientes/credito/nuevo/:rut" element={<NuevoCredito/>} />
+              <Route path="/ejecutivos/inicio" element={<InicioEjecutivos/>} />
+              <Route path="/ejecutivos/credito-info/:id" element={<InfoCredito/>} />
             </Routes>
           </div>
       </Router>

@@ -8,6 +8,10 @@ const getCreditosRut = rut => {
     return httpClient.get(`/api/v1/credito/cliente/${rut}`);
 }
 
+const getCreditoId = id => {
+    return httpClient.get(`/api/v1/credito/id/${id}`);
+}
+
 const simularCredito = (data) => {
     return httpClient.post("/api/v1/credito/calculaSimulacion", data);
 }
@@ -26,6 +30,14 @@ const remove = (id) => {
 
 const actualizarEstado = (id, estado) => {
     return httpClient.put(`/api/v1/credito/${id}`, estado); 
+}
+
+const revisionInicial = (data) => {
+    return httpClient.put('/api/v1/credito/revisaInicial', data);
+}
+
+const evaluar = (data) => {
+    return httpClient.put('/api/v1/credito/evaluar', data);
 }
 
 
@@ -48,11 +60,14 @@ const actualizarCredito = (data) => {
 export default {
     getCreditos,
     getCreditosRut,
+    getCreditoId,
     simularCredito,
     getTiposPrestamos,
     create,
     remove,
     actualizarEstado,
+    revisionInicial,
+    evaluar,
     //obtenerCredito,
     //actualizarCredito,
     //eliminarCredito
