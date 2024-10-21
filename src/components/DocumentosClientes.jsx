@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import documentacionService from "../services/documentacion.service"; // Asegúrate de que la ruta es correcta
-import Box from "@mui/material/Box";
+import { Snackbar, Alert } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -26,6 +26,9 @@ const DocumentosClientes = () => {
     fotocopiaRut: null,
     cuentaAhorros: null
   });
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); 
 
   useEffect(() => {
     const fetchDocumentos = async () => {
@@ -67,28 +70,41 @@ const DocumentosClientes = () => {
     }
   };
 
+  const handleSnackbarOpen = (message, severity = 'success') => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setOpenSnackbar(true);
+  };
+  
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') return;
+    setOpenSnackbar(false);
+  };
+
   const guardaDocumentacion = async (e) => {
     e.preventDefault();
-    const data = new FormData();
-    data.append('rut', rut);
-    // Si hay un ID de documento existente, añade el ID a la petición
-    if (id != null) {
-      data.append('id', id); // Añadir ID para actualizar el documento
-    }
-    for (let key in formData) {
-      // Verifica si el documento es un archivo antes de agregarlo
-      if (formData[key] instanceof File) {
-        data.append(key, formData[key], formData[key].name);
-        console.log(`Subiendo archivo: ${key}, Nombre: ${formData[key].name}`);
+    try{
+      const data = new FormData();
+      data.append('rut', rut);
+      // Si hay un ID de documento existente, añade el ID a la petición
+      if (id != null) {
+        data.append('id', id); // Añadir ID para actualizar el documento
       }
-    }
-    try {
+      for (let key in formData) {
+        // Verifica si el documento es un archivo antes de agregarlo
+        if (formData[key] instanceof File) {
+          data.append(key, formData[key], formData[key].name);
+          console.log(`Subiendo archivo: ${key}, Nombre: ${formData[key].name}`);
+        }
+      }
       const response = id 
       ? await documentacionService.update(data)
       : await documentacionService.create(data);
       console.log('Documentos enviados exitosamente', response.data);
-    } catch (error) {
-      console.error('Error al enviar los documentos', error);
+      handleSnackbarOpen('Documentos subidos con éxito', 'success');
+  }
+    catch (error) {
+      handleSnackbarOpen('Error al subir documentos. Inténtalo de nuevo.', 'error');
     }
   };
 
@@ -136,6 +152,16 @@ const DocumentosClientes = () => {
           Subir Documentos
         </Button>
       </form>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <Link to="/clientes/inicio">Volver a la lista de Clientes</Link>
       <br />
       <Link to={`/clientes/solicita-credito/${rut}`}>Volver a la lista de Créditos</Link>

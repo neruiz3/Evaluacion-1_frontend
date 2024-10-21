@@ -12,6 +12,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from "@mui/icons-material/Add";
+import { Snackbar, Alert } from "@mui/material";
 
 const NuevoCliente = () => {
   const [rut, setRut] = useState("");
@@ -34,6 +35,8 @@ const NuevoCliente = () => {
   const { id } = useParams();
   const [titleClienteForm, setTitleClienteForm] = useState("");
   const navigate = useNavigate();
+  
+  const [open, setOpen] = useState(false);
 
   const guardaCliente = (e) => {
     e.preventDefault();
@@ -104,6 +107,19 @@ const NuevoCliente = () => {
       setTitleClienteForm("NUEVO CLIENTE");
     }
   }, [id]);
+
+
+const handleClick = () => {
+  setOpen(true);
+};
+
+const handleClose = (event, reason) => {
+  if (reason === 'clickaway') {
+    return;
+  }
+  setOpen(false);
+};
+
 
   return (
     <Box
@@ -325,17 +341,33 @@ const NuevoCliente = () => {
         </FormControl>
         
         <FormControl>
-          <br />
           <Button
             variant="contained"
             color="info"
-            onClick={(e) => guardaCliente(e)}
-            style={{ marginTop: "0.5rem" }}
+            onClick={(e) => {
+              e.preventDefault();
+              guardaCliente(e);
+              handleClick();
+            }}
+            style={{ marginTop: '0.5rem' }}
             startIcon={<SaveIcon />}
           >
             GUARDAR
           </Button>
-        </FormControl>
+      </FormControl>
+
+      <Snackbar 
+        open={open} 
+        autoHideDuration={3000} 
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          Cliente guardado correctamente.
+        </Alert>
+      </Snackbar>
+
+      <Link to="/clientes/inicio">Volver a la lista de Clientes</Link>
         <br>
         
         </br>

@@ -94,119 +94,110 @@ const InicioEjecutivos = () => {
 
     return (
     <TableContainer component={Paper}>
-      <br />
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+          <br />
+    <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <TableHead>
-          <TableRow>
-            <TableCell align="left" sx={{ fontWeight: "bold" }}>
-              Rut del Cliente
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: "bold" }}>
-              Tipo de préstamo
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: "bold" }}>
-              Estado de solicitud
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: "bold" }}>
-              Operaciones
-            </TableCell>
-          </TableRow>
+            <TableRow>
+                <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                    Rut del Cliente
+                </TableCell>
+                <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                    Tipo de préstamo
+                </TableCell>
+                <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                    Estado de solicitud
+                </TableCell>
+                <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                    Operaciones
+                </TableCell>
+            </TableRow>
         </TableHead>
         <TableBody>
-          {creditos.map((credito) => (
-            <TableRow
-              key={credito.id}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell align="left">{credito.rut}</TableCell>
-              <TableCell align="left">{credito.tipoPrestamo}</TableCell>
-              <TableCell align="left">{credito.estado}</TableCell>
-
-              <Button
-                variant="contained"
-                color="info"
-                size="small"
-                onClick={() => detallar(credito.id)}
-                style={{ marginLeft: "0.5rem" }}
-                startIcon={<InfoIcon />}
+            {creditos.map((credito) => (
+                <TableRow
+                    key={credito.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                Información detallada
-                </Button>
-              
-                {credito.estado === "EN_EVALUACION" && (
-                <TableCell>
-                <Button
-                    variant="contained"
-                    color="info"
-                    size="small"
-                    onClick={() => visualizaInfo(credito.id)}
-                    style={{ marginLeft: "0.5rem" }}
-                    startIcon={<AddIcon />}
-                    >
-                    Evaluar
-                </Button>
-                </TableCell>
-                )}
-                {credito.estado === "EN_REVISION_INICIAL" && (
-                        <TableCell>
+                    <TableCell align="left">{credito.rut}</TableCell>
+                    <TableCell align="left">{credito.tipoPrestamo}</TableCell>
+                    <TableCell align="left">{credito.estado}</TableCell>
+                    <TableCell align="left"> {/* Añadir esta celda para operaciones */}
                         <Button
                             variant="contained"
-                            color="success"
+                            color="info"
                             size="small"
-                            onClick={() => compruebaDocs(credito)}
+                            onClick={() => detallar(credito.id)}
                             style={{ marginLeft: "0.5rem" }}
-                            startIcon={<CheckIcon />}
+                            startIcon={<InfoIcon />}
                         >
-                            Checkea documentacion
+                            Información detallada
                         </Button>
-                        </TableCell>
+
+                        {credito.estado === "EN_EVALUACION" && (
+                            <Button
+                                variant="contained"
+                                color="info"
+                                size="small"
+                                onClick={() => visualizaInfo(credito.id)}
+                                style={{ marginLeft: "0.5rem" }}
+                                startIcon={<AddIcon />}
+                            >
+                                Evaluar
+                            </Button>
                         )}
-                {credito.estado === "CANCELADA_POR_CLIENTE" && (
-                <TableCell>
-                    <Button
-                    variant="contained"
-                    color="error"
-                    size="small"
-                    onClick={() => elimina(credito.id)}
-                    style={{ marginLeft: "0.5rem" }}
-                    startIcon={<CheckIcon />}
-                    >
-                    Eliminar solicitud
-                    </Button>
-                </TableCell>
-                )}
-                {credito.estado === "EN_APROBACION_FINAL" && (
-                <TableCell>
-                    <Button
-                    variant="contained"
-                    color="success"
-                    size="small"
-                    onClick={() => cambiarEstado(credito.id, "APROBADA")}
-                    style={{ marginLeft: "0.5rem" }}
-                    startIcon={<CheckIcon />}
-                    >
-                    Aprobar
-                    </Button>
-                </TableCell>
-                )}
-                {credito.estado === "APROBADA" && (
-                <TableCell>
-                    <Button
-                    variant="contained"
-                    color="success"
-                    size="small"
-                    onClick={() => cambiarEstado(credito.id, "EN_DESEMBOLSO")}
-                    style={{ marginLeft: "0.5rem" }}
-                    startIcon={<CheckIcon />}
-                    >
-                    Lista para el Desembolso
-                    </Button>
-                </TableCell>
-                )}
-            </TableRow>
-          ))}
+                        {credito.estado === "EN_REVISION_INICIAL" && (
+                            <Button
+                                variant="contained"
+                                color="success"
+                                size="small"
+                                onClick={() => compruebaDocs(credito)}
+                                style={{ marginLeft: "0.5rem" }}
+                                startIcon={<CheckIcon />}
+                            >
+                                Chequear documentación
+                            </Button>
+                        )}
+                        {credito.estado === "CANCELADA_POR_CLIENTE" && (
+                            <Button
+                                variant="contained"
+                                color="error"
+                                size="small"
+                                onClick={() => elimina(credito.id)}
+                                style={{ marginLeft: "0.5rem" }}
+                                startIcon={<CheckIcon />}
+                            >
+                                Eliminar solicitud
+                            </Button>
+                        )}
+                        {credito.estado === "EN_APROBACION_FINAL" && (
+                            <Button
+                                variant="contained"
+                                color="success"
+                                size="small"
+                                onClick={() => cambiarEstado(credito.id, "APROBADA")}
+                                style={{ marginLeft: "0.5rem" }}
+                                startIcon={<CheckIcon />}
+                            >
+                                Aprobar
+                            </Button>
+                        )}
+                        {credito.estado === "APROBADA" && (
+                            <Button
+                                variant="contained"
+                                color="success"
+                                size="small"
+                                onClick={() => cambiarEstado(credito.id, "EN_DESEMBOLSO")}
+                                style={{ marginLeft: "0.5rem" }}
+                                startIcon={<CheckIcon />}
+                            >
+                                Lista para el Desembolso
+                            </Button>
+                        )}
+                    </TableCell>
+                </TableRow>
+            ))}
         </TableBody>
-      </Table>
+    </Table>
     </TableContainer>
     );
 }; 

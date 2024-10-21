@@ -91,11 +91,15 @@ const Informacion = () => {
                         <TableCell>{cliente.apellidos}</TableCell>
                     </TableRow>
                     <TableRow>
+                        <TableCell><strong>Edad:</strong></TableCell>
+                        <TableCell>{cliente.edad}</TableCell>
+                    </TableRow>
+                    <TableRow>
                         <TableCell><strong>RUT:</strong></TableCell>
                         <TableCell>{cliente.rut}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell><strong>Ingresos mensuales en Pesos Chilenos:</strong></TableCell>
+                        <TableCell><strong>Ingresos mensuales en Pesos Chilenos ($):</strong></TableCell>
                         <TableCell>{cliente.ingresos?.toFixed(2)||"0.00"}</TableCell>
                     </TableRow>
                     <TableRow>
@@ -118,31 +122,35 @@ const Informacion = () => {
                         </TableRow>
                     )}
                     <TableRow>
-                        <TableCell><strong>Suma de todas las deudas en Pesos Chilenos</strong></TableCell>
+                        <TableCell><strong>Suma de todas las deudas en Pesos Chilenos ($):</strong></TableCell>
                         <TableCell>{cliente.deudaTotal?.toFixed(2)||"0.00"}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell><strong>Saldo en la Cuenta de Ahorros:</strong></TableCell>
+                        <TableCell><strong>Saldo en la Cuenta de Ahorros ($):</strong></TableCell>
                         <TableCell>{cliente.saldo?.toFixed(2)||"0.00"}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell><strong>Mayor Retiro en los últimos 6 meses:</strong></TableCell>
+                        <TableCell><strong>Mayor Retiro en los últimos 6 meses ($):</strong></TableCell>
                         <TableCell>{cliente.mayorRetiro6?.toFixed(2)||"0.00"}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell><strong>Suma de depósitos realizados durante el último año en Pesos Chilenos:</strong></TableCell>
-                        <TableCell>{cliente.totalDepositos?.toFixed(2)||"0.00"}</TableCell>
+                        <TableCell><strong>¿Realiza depósitos en la cuenta mensual o trimestralmente?:</strong></TableCell>
+                        <TableCell>{mostrarBooleano(cliente.depositoRegular)}</TableCell>
                     </TableRow>
+                    {cliente.depositoRegular ? (
+                        <TableRow>
+                            <TableCell><strong>Suma de depósitos realizados durante el último año ($):</strong></TableCell>
+                            <TableCell>{cliente.totalDepositos?.toFixed(2)||"0.00"}</TableCell>
+                        </TableRow>
+                    ):null}
                     <TableRow>
                         <TableCell><strong>En los últimos 12 meses, saldo positivo en la cuenta, sin retiros significativos:</strong></TableCell>
                         <TableCell>{mostrarBooleano(cliente.saldoPositivo)}</TableCell>
                     </TableRow>
-                    {cliente.saldoPositivo && (
-                        <TableRow>
-                            <TableCell><strong>Mayor Retiro en los ultimos 12 meses:</strong></TableCell>
-                            <TableCell>{(cliente.mayorRetiro12?.toFixed(2)||"0.00")}</TableCell>
-                        </TableRow>
-                    )}
+                    <TableRow>
+                        <TableCell><strong>Mayor Retiro en los ultimos 12 meses:</strong></TableCell>
+                        <TableCell>{(cliente.mayorRetiro12?.toFixed(2)||"0.00")}</TableCell>
+                    </TableRow>
                     <TableRow>
                         <TableCell><strong>Antigüedad de la cuenta de ahorros, en años:</strong></TableCell>
                         <TableCell>{cliente.tiempoCuentaAhorros}</TableCell>

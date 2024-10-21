@@ -113,7 +113,7 @@ const InicioClientes = () => {
                 </Button>
                 <Button
                   variant="contained"
-                  color="secondary"
+                  color="info"
                   size="small"
                   onClick={() => addDocumentos(cliente.rut)}
                   style={{ marginLeft: "0.5rem" }}
@@ -123,7 +123,7 @@ const InicioClientes = () => {
                 </Button>
                 <Button
                   variant="contained"
-                  color="secondary"
+                  color="info"
                   size="small"
                   onClick={() => simulaCredito()}
                   style={{ marginLeft: "0.5rem" }}
@@ -133,7 +133,7 @@ const InicioClientes = () => {
                 </Button>
                 <Button
                   variant="contained"
-                  color="secondary"
+                  color="info"
                   size="small"
                   onClick={() => solicitaCredito(cliente.rut)}
                   style={{ marginLeft: "0.5rem" }}
